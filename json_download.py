@@ -37,7 +37,7 @@ def download_json_periodically():
         time.sleep(24 * 60 * 60)  # Esperar 24 horas
 
 # Ruta para iniciar la tarea de descarga de archivos
-@app.get("/")
+@app.get("/json")
 async def start_download(background_tasks: BackgroundTasks):
     background_tasks.add_task(download_json_periodically)
     return {"message": "Tarea de descarga iniciada."}
