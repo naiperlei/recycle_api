@@ -4,3 +4,5 @@ keras
 pillow
 numpy
 tensorflow
+redis
+types-redis
