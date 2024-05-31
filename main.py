@@ -5,12 +5,13 @@ from PIL import Image
 import numpy as np
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.templating import Jinja2Templates
+import uvicorn
 
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 
-
+waste_types = ['cardboard', 'glass', 'metal', 'paper', 'plastic', 'trash']
 # Enable CORS
 app.add_middleware(
     CORSMiddleware,
@@ -40,12 +41,16 @@ async def predict(file: UploadFile = File(...)):
 
     # Hacer la predicción utilizando el modelo cargado
     predictions = model.predict(processed_image)
+    y_pred  = np.argmax(predictions, axis=-1)
 
     # Devolver las predicciones en formato JSON
-    return JSONResponse(content={"predictions": predictions.tolist()})
+    return JSONResponse(content={"predictions": y_pred.tolist()})
 
 @app.get("/")
 async def menu(request: Request):
     return templates.TemplateResponse(
     request=request, name="index.html"
 )
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="localhost", port=8000)
